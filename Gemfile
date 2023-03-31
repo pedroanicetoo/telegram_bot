@@ -15,3 +15,7 @@ gem 'puma'
 gem 'rufus-scheduler'
 gem 'net-http'
 gem 'telegram-bot-ruby'
+gem "unicorn"
+gem "thin"
+gem "puma"
+gem "passenger", ">= 5.0.11"
