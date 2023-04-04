@@ -1,0 +1,2 @@
+/register - Registra seu CHAT_ID para receber mensagens. 
+/unregister - Remove o seu CHAT_ID dos registros.
