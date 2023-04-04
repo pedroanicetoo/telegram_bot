@@ -1,10 +1,8 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.1"
+ruby "3.1.0"
 
-# setup gems 
-gem 'json', '~> 2.6', '>= 2.6.3'
 gem 'pry'
 gem 'sinatra'
 gem 'redis', '~> 4.8.0' 
@@ -16,6 +14,3 @@ gem 'rufus-scheduler'
 gem 'net-http'
 gem 'telegram-bot-ruby'
 gem "unicorn"
-gem "thin"
-gem "puma"
-gem "passenger", ">= 5.0.11"
