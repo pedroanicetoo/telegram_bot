@@ -12,10 +12,10 @@ module ChatActions
       def run_bot
         Telegram::Bot::Client.run(API_TELEGRAM_KEY, logger: Logger.new($stderr)) do |bot|
           bot.listen do |message|
-            if message.text.match?(/\gpt \w+/i)
+            if message.text.match?(/\gpt +/i)
               register_chat
               response = send_chat_gpt_message(message.text[5..])
-              bot.api.send_message(chat_id: message.chat.id, text: response) # reference
+              bot.api.send_message(chat_id: message.chat.id, text: response)
             else
               bot.api.send_message(chat_id: message.chat.id, text: @commands)
             end
