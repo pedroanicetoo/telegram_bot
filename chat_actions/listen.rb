@@ -12,32 +12,46 @@ module ChatActions
       def run_bot
         Telegram::Bot::Client.run(API_TELEGRAM_KEY, logger: Logger.new($stderr)) do |bot|
           bot.listen do |message|
-            answer_by_command(bot, message)
+
+            case message
+            when Telegram::Bot::Types::Message
+              if message.new_chat_members &&
+                 message.new_chat_members.map(&:id).include?(bot.api.get_me['result']['id'])
+                bot.api.send_message(chat_id: message.chat.id, text: welcome_message)
+              end
+              answer_by_command(bot, message)
+            else
+              # do nothing
+            end
           end
         end
       end
 
       def welcome_message
-        <<-MSG
-          Olá, este são meus comandos:
-          #{@commands}
-        MSG
+        "Olá, este são meus comandos:\n#{@commands}"
       end
 
       def answer_by_command(bot, message)
-        return if message.class != Telegram::Bot::Types::Message
         return unless message.text
 
-        if message.text.match?(/\gpt +/i)
-          register_chat
-          response = send_chat_gpt_message(message.text[5..])
-          bot.api.send_message(chat_id: message.chat.id, text: response)
-        end
-
-        if message.text == '/help'
+        case message.text
+        when '/help'
           bot.api.send_message(chat_id: message.chat.id, text: @commands)
+        else
+          complex_commands(message)
         end
+      end
 
+      def welcome_message
+        "Olá, esses são meus comandos:\n#{@commands}"
+      end
+
+      def complex_commands(message)
+        return unless message.text.match?(/\gpt +/i)
+
+        register_chat
+        response = send_chat_gpt_message(message.text[5..])
+        bot.api.send_message(chat_id: message.chat.id, text: response)
       end
 
       def register_chat
