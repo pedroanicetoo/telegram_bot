@@ -12,7 +12,6 @@ module ChatActions
       def run_bot
         Telegram::Bot::Client.run(API_TELEGRAM_KEY, logger: Logger.new($stderr)) do |bot|
           bot.listen do |message|
-
             case message
             when Telegram::Bot::Types::Message
               if message.new_chat_members &&
@@ -38,7 +37,7 @@ module ChatActions
         when '/help'
           bot.api.send_message(chat_id: message.chat.id, text: @commands)
         else
-          complex_commands(message)
+          chat_gpt_command(bot, message)
         end
       end
 
@@ -46,7 +45,7 @@ module ChatActions
         "Olá, esses são meus comandos:\n#{@commands}"
       end
 
-      def complex_commands(message)
+      def chat_gpt_command(bot, message)
         return unless message.text.match?(/\gpt +/i)
 
         register_chat
