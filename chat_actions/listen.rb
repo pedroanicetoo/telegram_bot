@@ -51,7 +51,7 @@ module ChatActions
 
         register_chat
         response = send_chat_gpt_message(message.text[5..])
-        bot.api.send_message(chat_id: message.chat.id, text: response)
+        bot.api.send_message(chat_id: message.chat.id, text: response) if response
       end
 
       def register_chat
