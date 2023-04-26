@@ -15,11 +15,11 @@ module ChatActions
 
             case message
             when Telegram::Bot::Types::Message
-              if message.new_chat_members &&
-                 message.new_chat_members.map(&:id).include?(bot.api.get_me['result']['id'])
+              if join_to_the_group?(bot, message)
                 bot.api.send_message(chat_id: message.chat.id, text: welcome_message)
+              else
+                answer_by_command(bot, message)
               end
-              answer_by_command(bot, message)
             else
               # do nothing
             end
@@ -40,6 +40,10 @@ module ChatActions
         else
           complex_commands(bot, message)
         end
+      end
+
+      def join_to_the_group?(bot, message)
+        message.new_chat_members && message.new_chat_members.map(&:id).include?(bot.api.get_me['result']['id'])
       end
 
       def welcome_message
